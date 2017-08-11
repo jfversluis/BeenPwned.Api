@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -22,7 +23,14 @@ namespace BeenPwned.Api
             if (!Uri.IsWellFormedUriString(baseApiUrl, UriKind.Absolute))
                 throw new ArgumentException("The given HIBP base URL does not seem to be valid. Make sure you provide a full, valid URL.", nameof(baseApiUrl));
 
-            _httpClient = new HttpClient
+            HttpClientHandler handler = new HttpClientHandler();
+			if (handler.SupportsAutomaticDecompression)
+			{
+				handler.AutomaticDecompression = DecompressionMethods.GZip |
+												 DecompressionMethods.Deflate;
+			}
+
+            _httpClient = new HttpClient(handler)
             {
                 BaseAddress = new Uri(baseApiUrl)
             };
