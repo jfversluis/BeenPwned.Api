@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace BeenPwned.Api
 {
-    // TODO add results based on HTTP status codes
+    // TODO Find a way to handle the response codes (https://haveibeenpwned.com/API/v2/#ResponseCodes) globally
     public class BeenPwnedClient : IDisposable
     {
         private bool _isDisposing;
@@ -29,7 +29,7 @@ namespace BeenPwned.Api
 				handler.AutomaticDecompression = DecompressionMethods.GZip |
 												 DecompressionMethods.Deflate;
 			}
-
+            
             _httpClient = new HttpClient(handler)
             {
                 BaseAddress = new Uri(baseApiUrl)
@@ -38,49 +38,90 @@ namespace BeenPwned.Api
             _httpClient.DefaultRequestHeaders.UserAgent.Clear();
             _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue(useragent)));
         }
-
+        
         // TODO add error handling
-        // TODO add truncate switch
-        public async Task<IEnumerable<Breach>> GetBreaches(string domain = "")
+        public async Task<IEnumerable<Breach>> GetAllBreaches(bool truncateResponse = true, string domain = "", bool includeUnverified = false)
         {
             var endpointUrl = "breaches";
 
+            var queryValues = new Dictionary<string, string>
+            {
+                { "truncateResponse", truncateResponse.ToString() },
+                { "includeUnverified", includeUnverified.ToString() }
+            };
+
             if (!string.IsNullOrWhiteSpace(domain))
-                endpointUrl += $"?domain={domain}";
+                queryValues.Add("domain", domain);
+
+            endpointUrl += Utilities.BuildQueryString(queryValues);
 
             return await GetResult<IEnumerable<Breach>>(endpointUrl);
         }
 
         // TODO add error handling
-        // TODO add domain filter
-        // TODO add unverified switch
-        public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account)
+        public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account, bool truncateResponse = true, bool includeUnverified = false)
         {
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
 
-            return await GetResult<IEnumerable<Breach>>($"breachesbreachedaccount/{account}");
+            var endpointUrl = $"breachesbreachedaccount/{account}";
+
+            var queryValues = new Dictionary<string, string>
+            {
+                { "truncateResponse", truncateResponse.ToString() },
+                { "includeUnverified", includeUnverified.ToString() }
+            };
+
+            endpointUrl += Utilities.BuildQueryString(queryValues);
+
+            return await GetResult<IEnumerable<Breach>>(endpointUrl);
         }
 
         // TODO add error handling
-        // TODO account needs to be an email
-        public async Task<IEnumerable<Paste>> GetPastes(string account)
+        public async Task<IEnumerable<Paste>> GetPastesForAccount(string account)
         {
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
+
+            if (!Utilities.IsValidEmailaddress(account))
+                throw new ArgumentException("Account it not a (valid) emailaddress", nameof(account));
 
             return await GetResult<IEnumerable<Paste>>($"pasteaccount/{account}");
         }
 
-        public async Task<IEnumerable<string>> GetDataClasses()
+        public async Task<IEnumerable<string>> GetAllDataClasses()
         {
             return await GetResult<IEnumerable<string>>("dataclasses");
         }
-
-        // TODO implement password hash switch
-        public async Task<IEnumerable<string>> GetPwnedPassword(string password)
+        
+        public async Task<bool> GetPwnedPassword(string password, bool originalPasswordIsAHash = false,
+            bool sendAsPostRequest = false)
         {
-            return await GetResult<IEnumerable<string>>($"pwnedpassword/{password}");
+            HttpResponseMessage result;
+
+            if (sendAsPostRequest)
+            {
+                var formValues =
+                    new List<KeyValuePair<string, string>> {new KeyValuePair<string, string>("Password", password)};
+
+                result =
+                    await _httpClient.PostAsync($"pwnedpassword?originalPasswordIsAHash={originalPasswordIsAHash}",
+                    new FormUrlEncodedContent(formValues));
+            }
+            else
+            {
+                result = await _httpClient.GetAsync($"pwnedpassword/{password}?originalPasswordIsAHash={originalPasswordIsAHash}");
+            }
+
+            switch ((int) result.StatusCode)
+            {
+                case 200:
+                    return true;
+                case 404:
+                    return false;
+                default:
+                    throw new Exception($"Unexpected result from API. Statuscode {result.StatusCode}, message: {result.ReasonPhrase}");
+            }
         }
 
         public void Dispose()
