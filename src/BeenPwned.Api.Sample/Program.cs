@@ -8,11 +8,17 @@ namespace BeenPwned.Api.Sample
         {
             var client = new BeenPwnedClient("BeenPwned.Api.SampleApp");
 
+            Console.WriteLine("-- All breaches --");
             var breaches = client.GetBreaches().Result;
 
-            Console.WriteLine("-- All breaches --");
-
             foreach (var breach in breaches)
+                Console.WriteLine($"{breach.Name}");
+
+            Console.WriteLine();
+            Console.WriteLine("-- All breaches for adobe.com --");
+            var breachesForDomain = client.GetBreaches("adobe.com").Result;
+
+            foreach (var breach in breachesForDomain)
                 Console.WriteLine($"{breach.Name}");
 
             Console.WriteLine();

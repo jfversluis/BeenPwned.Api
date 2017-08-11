@@ -23,7 +23,7 @@ namespace BeenPwned.Api
             if (!Uri.IsWellFormedUriString(baseApiUrl, UriKind.Absolute))
                 throw new ArgumentException("The given HIBP base URL does not seem to be valid. Make sure you provide a full, valid URL.", nameof(baseApiUrl));
 
-            HttpClientHandler handler = new HttpClientHandler();
+            var handler = new HttpClientHandler();
 			if (handler.SupportsAutomaticDecompression)
 			{
 				handler.AutomaticDecompression = DecompressionMethods.GZip |
@@ -40,13 +40,15 @@ namespace BeenPwned.Api
         }
 
         // TODO add error handling
-        // TODO add domain filter
         // TODO add truncate switch
-        public async Task<IEnumerable<Breach>> GetBreaches()
+        public async Task<IEnumerable<Breach>> GetBreaches(string domain = "")
         {
-            var stringResult = await _httpClient.GetStringAsync("breaches");
+            var endpointUrl = "breaches";
 
-            return JsonConvert.DeserializeObject<IEnumerable<Breach>>(stringResult);
+            if (!string.IsNullOrWhiteSpace(domain))
+                endpointUrl += $"?domain={domain}";
+
+            return await GetResult<IEnumerable<Breach>>(endpointUrl);
         }
 
         // TODO add error handling
@@ -57,9 +59,7 @@ namespace BeenPwned.Api
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
 
-            var stringResult = await _httpClient.GetStringAsync($"breachesbreachedaccount/{account}");
-
-            return JsonConvert.DeserializeObject<IEnumerable<Breach>>(stringResult);
+            return await GetResult<IEnumerable<Breach>>($"breachesbreachedaccount/{account}");
         }
 
         // TODO add error handling
@@ -69,27 +69,18 @@ namespace BeenPwned.Api
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
 
-            var stringResult = await _httpClient.GetStringAsync($"pasteaccount/{account}");
-
-            return JsonConvert.DeserializeObject<IEnumerable<Paste>>(stringResult);
+            return await GetResult<IEnumerable<Paste>>($"pasteaccount/{account}");
         }
 
         public async Task<IEnumerable<string>> GetDataClasses()
         {
-            var stringResult = await _httpClient.GetStringAsync("dataclasses");
-
-            return JsonConvert.DeserializeObject<IEnumerable<string>>(stringResult);
+            return await GetResult<IEnumerable<string>>("dataclasses");
         }
 
         // TODO implement password hash switch
         public async Task<IEnumerable<string>> GetPwnedPassword(string password)
         {
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("A password needs to be specified", nameof(password));
-
-            var stringResult = await _httpClient.GetStringAsync($"pwnedpassword/{password}");
-
-            return JsonConvert.DeserializeObject<IEnumerable<string>>(stringResult);
+            return await GetResult<IEnumerable<string>>($"pwnedpassword/{password}");
         }
 
         public void Dispose()
@@ -101,6 +92,13 @@ namespace BeenPwned.Api
             {
                 _httpClient?.Dispose();
             }
+        }
+
+        private async Task<T> GetResult<T>(string endpoint) where T : class
+        {
+            var stringResult = await _httpClient.GetStringAsync(endpoint);
+
+            return JsonConvert.DeserializeObject<T>(stringResult);
         }
     }
 }
