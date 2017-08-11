@@ -16,4 +16,8 @@
       <dependency id="Newtonsoft.Json" version="10.0.0.3" />
     </dependencies> 
   </metadata>
+  <files>
+    <!--NetStandard/PCL-->
+    <file src="src\BeenPwned.Api\bin\Release\netstandard1.3\Plugin.Settings.*" target="lib\netstandard1.3" />
+  </files>
 </package>
