@@ -7,6 +7,7 @@
     <authors>Gerald Versluis</authors>
     <owners>Gerald Versluis</owners>
     <projectUrl>https://github.com/jfversluis/BeenPwned.Api</projectUrl>
+	<iconUrl>https://github.com/jfversluis/BeenPwned.Api/raw/master/nuget/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A C#/.net wrapper for the haveibeenpwned API by Troy Hunt</description>
     <releaseNotes></releaseNotes>
@@ -25,5 +26,8 @@
 	
 	<!--Net46-->
     <file src="..\src\BeenPwned.Api\bin\Release\net46\BeenPwned.Api.*" target="lib\net46" />
+	
+	<!--PCL Profile111-->
+    <file src="..\src\BeenPwned.Api\bin\Release\portable-net45+win8+wpa81\BeenPwned.Api.*" target="lib\portable-net45+win8+wpa81" />
   </files>
 </package>
