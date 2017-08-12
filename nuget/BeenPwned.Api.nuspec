@@ -17,7 +17,13 @@
     </dependencies> 
   </metadata>
   <files>
-    <!--NetStandard/PCL-->
+    <!--NetStandard-->
     <file src="..\src\BeenPwned.Api\bin\Release\netstandard1.3\BeenPwned.Api.*" target="lib\netstandard1.3" />
+	
+	<!--Net45-->
+    <file src="..\src\BeenPwned.Api\bin\Release\net45\BeenPwned.Api.*" target="lib\net45" />
+	
+	<!--Net46-->
+    <file src="..\src\BeenPwned.Api\bin\Release\net46\BeenPwned.Api.*" target="lib\net46" />
   </files>
 </package>
