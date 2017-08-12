@@ -7,7 +7,8 @@
     <authors>Gerald Versluis</authors>
     <owners>Gerald Versluis</owners>
     <projectUrl>https://github.com/jfversluis/BeenPwned.Api</projectUrl>
-	<iconUrl>https://github.com/jfversluis/BeenPwned.Api/raw/master/nuget/logo.png</iconUrl>
+	<iconUrl>https://github.com/jfversluis/BeenPwned.Api/raw/master/nuget/icon.png</iconUrl>
+	<licenseUrl>https://github.com/jfversluis/BeenPwned.Api/blob/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A C#/.net wrapper for the haveibeenpwned API by Troy Hunt</description>
     <releaseNotes></releaseNotes>
