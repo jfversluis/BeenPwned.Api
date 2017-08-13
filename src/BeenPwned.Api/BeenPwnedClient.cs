@@ -82,8 +82,10 @@ namespace BeenPwned.Api
 
             if (sendAsPostRequest)
             {
-                var formValues =
-                    new List<KeyValuePair<string, string>> {new KeyValuePair<string, string>("Password", password)};
+                var formValues = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("Password", password)
+                };
 
                 var endpointUrl = Utilities.BuildQueryString("pwnedpassword", queryValues);
 
