@@ -22,13 +22,9 @@ namespace BeenPwned.Api
             _requestExecuter = new RequestExecuter(useragent, baseApiUrl);
         }
         
-        public async Task<IEnumerable<Breach>> GetAllBreaches(bool truncateResponse = true, string domain = "", bool includeUnverified = false)
+        public async Task<IEnumerable<Breach>> GetAllBreaches(string domain = "")
         {
-            var queryValues = new Dictionary<string, string>
-            {
-                {"truncateResponse", truncateResponse.ToString()},
-                {"includeUnverified", includeUnverified.ToString()}
-            };
+            var queryValues = new Dictionary<string, string>();
 
             if (!string.IsNullOrWhiteSpace(domain))
                 queryValues.Add("domain", domain);
@@ -38,7 +34,7 @@ namespace BeenPwned.Api
             return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
         }
 
-        public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account, bool truncateResponse = true, bool includeUnverified = false)
+        public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account, string domain ="", bool truncateResponse = true, bool includeUnverified = false)
         {
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
@@ -48,6 +44,9 @@ namespace BeenPwned.Api
                 { "truncateResponse", truncateResponse.ToString() },
                 { "includeUnverified", includeUnverified.ToString() }
             };
+
+            if (!string.IsNullOrWhiteSpace(domain))
+                queryValues.Add("domain", domain);
 
             var endpointUrl = Utilities.BuildQueryString($"breachesbreachedaccount/{account}", queryValues);
 
