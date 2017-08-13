@@ -49,7 +49,7 @@ namespace BeenPwned.Api.Internals
                 case 404:
                     throw new BeenPwnedUnavailableException("Not found");
                 case 429:
-                    throw new BeenPwnedUnavailableException("Not found");
+                    throw new BeenPwnedUnavailableException("Too many requests");
                 default:
                     throw new BeenPwnedUnavailableException("Unkown error");
             }
