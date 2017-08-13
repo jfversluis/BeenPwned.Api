@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AA73D448-228C-4A4C-9F4F-B432D7689B5B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BeenPwned.Api.Sample</RootNamespace>
-    <AssemblyName>BeenPwned.Api.Sample</AssemblyName>
+    <RootNamespace>BeenPwnedApiSample.Console</RootNamespace>
+    <AssemblyName>BeenPwnedApiSample.Console</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BeenPwned.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BeenPwned.Api.1.0.10\lib\net46\BeenPwned.Api.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -66,12 +69,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BeenPwned.Api\BeenPwned.Api.csproj">
-      <Project>{85f73c63-ac75-4c65-9e0c-7740ce47be33}</Project>
-      <Name>BeenPwned.Api</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
