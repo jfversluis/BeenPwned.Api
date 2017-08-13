@@ -37,8 +37,24 @@ namespace BeenPwned.Api.Internals
         public async Task<T> GetResultAsync<T>(string endpoint) where T : class
         {
             var response = await _httpClient.GetAsync(endpoint);
-            var stringResult = await response.Content.ReadAsStringAsync();
 
+            switch ((int)response.StatusCode)
+            {
+                case 200:
+                    break;
+                case 400:
+                    throw new BeenPwnedUnavailableException("Invalid request");
+                case 403:
+                    throw new BeenPwnedUnavailableException("Access denied");
+                case 404:
+                    throw new BeenPwnedUnavailableException("Not found");
+                case 429:
+                    throw new BeenPwnedUnavailableException("Not found");
+                default:
+                    throw new BeenPwnedUnavailableException("Unkown error");
+            }
+
+            var stringResult = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(stringResult);
         }
 
