@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace BeenPwned.Api
 {
     // TODO Find a way to handle the response codes (https://haveibeenpwned.com/API/v2/#ResponseCodes) globally
-    public class BeenPwnedClient : IDisposable
+    public class BeenPwnedClient : IBeenPwnedClient
     {
         private bool _isDisposing;
         private readonly HttpClient _httpClient;
