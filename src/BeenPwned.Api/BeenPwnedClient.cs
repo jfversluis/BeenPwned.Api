@@ -12,7 +12,6 @@ namespace BeenPwned.Api
     // TODO Find a way to handle the response codes (https://haveibeenpwned.com/API/v2/#ResponseCodes) globally
     public class BeenPwnedClient : IBeenPwnedClient
     {
-        private bool _isDisposing;
         private readonly HttpClient _httpClient;
 
         public BeenPwnedClient(string useragent, string baseApiUrl = "https://haveibeenpwned.com/api/v2/")
@@ -126,12 +125,7 @@ namespace BeenPwned.Api
 
         public void Dispose()
         {
-            // TODO this necessary?
-            if (!_isDisposing)
-            {
-                _isDisposing = true;
-                _httpClient.Dispose();
-            }
+            _httpClient.Dispose();
         }
 
         private async Task<T> GetResult<T>(string endpoint) where T : class
