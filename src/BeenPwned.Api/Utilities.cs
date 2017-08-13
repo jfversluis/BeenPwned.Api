@@ -6,12 +6,12 @@ namespace BeenPwned.Api
 {
     internal static class Utilities
     {
-        internal static string BuildQueryString(Dictionary<string, string> keyValueDictionary)
+        internal static string BuildQueryString(string url, Dictionary<string, string> keyValueDictionary)
         {
             var array = keyValueDictionary.Select(x => x.Key + "=" + WebUtility.UrlEncode(x.Value.ToString()))
                 .ToArray();
 
-            return "?" + string.Join("&", array);
+            return url + "?" + string.Join("&", array);
         }
 
         internal static bool IsValidEmailaddress(string emailaddress)

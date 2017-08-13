@@ -41,8 +41,6 @@ namespace BeenPwned.Api
         // TODO add error handling
         public async Task<IEnumerable<Breach>> GetAllBreaches(bool truncateResponse = true, string domain = "", bool includeUnverified = false)
         {
-            var endpointUrl = "breaches";
-
             var queryValues = new Dictionary<string, string>
             {
                 { "truncateResponse", truncateResponse.ToString() },
@@ -52,7 +50,7 @@ namespace BeenPwned.Api
             if (!string.IsNullOrWhiteSpace(domain))
                 queryValues.Add("domain", domain);
 
-            endpointUrl += Utilities.BuildQueryString(queryValues);
+            var endpointUrl = Utilities.BuildQueryString("breaches", queryValues);
 
             return await GetResult<IEnumerable<Breach>>(endpointUrl);
         }
@@ -63,15 +61,13 @@ namespace BeenPwned.Api
             if (string.IsNullOrWhiteSpace(account))
                 throw new ArgumentException("An account name needs to be specified", nameof(account));
 
-            var endpointUrl = $"breachesbreachedaccount/{account}";
-
             var queryValues = new Dictionary<string, string>
             {
                 { "truncateResponse", truncateResponse.ToString() },
                 { "includeUnverified", includeUnverified.ToString() }
             };
 
-            endpointUrl += Utilities.BuildQueryString(queryValues);
+            var endpointUrl = Utilities.BuildQueryString($"breachesbreachedaccount/{account}", queryValues);
 
             return await GetResult<IEnumerable<Breach>>(endpointUrl);
         }
@@ -96,6 +92,11 @@ namespace BeenPwned.Api
         public async Task<bool> GetPwnedPassword(string password, bool originalPasswordIsAHash = false,
             bool sendAsPostRequest = false)
         {
+            var queryValues = new Dictionary<string, string>
+            {
+                { "originalPasswordIsAHash", originalPasswordIsAHash.ToString() }
+            };
+
             HttpResponseMessage result;
 
             if (sendAsPostRequest)
@@ -103,13 +104,15 @@ namespace BeenPwned.Api
                 var formValues =
                     new List<KeyValuePair<string, string>> {new KeyValuePair<string, string>("Password", password)};
 
-                result =
-                    await _httpClient.PostAsync($"pwnedpassword?originalPasswordIsAHash={originalPasswordIsAHash}",
-                    new FormUrlEncodedContent(formValues));
+                var endpointUrl = Utilities.BuildQueryString("pwnedpassword", queryValues);
+
+                result = await _httpClient.PostAsync(endpointUrl, new FormUrlEncodedContent(formValues));
             }
             else
             {
-                result = await _httpClient.GetAsync($"pwnedpassword/{password}?originalPasswordIsAHash={originalPasswordIsAHash}");
+                var endpointUrl = Utilities.BuildQueryString($"pwnedpassword/{password}", queryValues);
+
+                result = await _httpClient.GetAsync(endpointUrl);
             }
 
             switch ((int) result.StatusCode)
