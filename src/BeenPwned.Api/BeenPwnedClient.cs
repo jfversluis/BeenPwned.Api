@@ -105,7 +105,7 @@ namespace BeenPwned.Api
                 case 404:
                     return false;
                 default:
-                    throw new Exception($"Unexpected result from API. Statuscode {result.StatusCode}, message: {result.ReasonPhrase}");
+                    throw new BeenPwnedUnavailableException($"Unexpected result from API. Statuscode {result.StatusCode}, message: {result.ReasonPhrase}");
             }
         }
 
