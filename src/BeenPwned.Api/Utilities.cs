@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace BeenPwned.Api
 {
@@ -16,8 +17,9 @@ namespace BeenPwned.Api
 
         internal static bool IsValidEmailaddress(string emailaddress)
         {
-            // TODO needs implementation
-            return true;
+            var regex = "^(([^<>()[\\]\\\\.,;:\\s@\\\"\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\\\"\"]+)*)|(\\\"\".+\\\"\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+
+            return new Regex(regex).IsMatch(emailaddress);
         }
     }
 }
