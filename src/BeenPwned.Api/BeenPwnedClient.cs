@@ -127,10 +127,9 @@ namespace BeenPwned.Api
         public void Dispose()
         {
             // TODO this necessary?
-            _isDisposing = true;
-
             if (!_isDisposing)
             {
+                _isDisposing = true;
                 _httpClient.Dispose();
             }
         }
