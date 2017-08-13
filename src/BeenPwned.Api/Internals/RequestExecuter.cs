@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace BeenPwned.Api.Internals
 {
-    internal class RequestExcecuter : IRequestExcecuter
+    internal class RequestExecuter : IRequestExecuter
     {
         private readonly HttpClient _httpClient;
 
-        public RequestExcecuter(string useragent, string baseApiUrl)
+        public RequestExecuter(string useragent, string baseApiUrl)
         {
             var handler = new HttpClientHandler();
             if (handler.SupportsAutomaticDecompression)

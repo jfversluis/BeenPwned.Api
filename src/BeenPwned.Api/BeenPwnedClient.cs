@@ -9,7 +9,7 @@ namespace BeenPwned.Api
 {
     public class BeenPwnedClient : IBeenPwnedClient
     {
-        private readonly IRequestExcecuter _requestExcecuter;
+        private readonly IRequestExecuter _requestExecuter;
 
         public BeenPwnedClient(string useragent, string baseApiUrl = "https://haveibeenpwned.com/api/v2/")
         {
@@ -19,7 +19,7 @@ namespace BeenPwned.Api
             if (!Uri.IsWellFormedUriString(baseApiUrl, UriKind.Absolute))
                 throw new ArgumentException("The given HIBP base URL does not seem to be valid. Make sure you provide a full, valid URL.", nameof(baseApiUrl));
 
-            _requestExcecuter = new RequestExcecuter(useragent, baseApiUrl);
+            _requestExecuter = new RequestExecuter(useragent, baseApiUrl);
         }
         
         public async Task<IEnumerable<Breach>> GetAllBreaches(bool truncateResponse = true, string domain = "", bool includeUnverified = false)
@@ -35,7 +35,7 @@ namespace BeenPwned.Api
 
             var endpointUrl = Utilities.BuildQueryString("breaches", queryValues);
 
-            return await _requestExcecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
+            return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
         }
 
         public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account, bool truncateResponse = true, bool includeUnverified = false)
@@ -51,7 +51,7 @@ namespace BeenPwned.Api
 
             var endpointUrl = Utilities.BuildQueryString($"breachesbreachedaccount/{account}", queryValues);
 
-            return await _requestExcecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
+            return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
         }
 
         public async Task<IEnumerable<Paste>> GetPastesForAccount(string account)
@@ -62,12 +62,12 @@ namespace BeenPwned.Api
             if (!Utilities.IsValidEmailaddress(account))
                 throw new ArgumentException("Account it not a (valid) emailaddress", nameof(account));
 
-            return await _requestExcecuter.GetResultAsync<IEnumerable<Paste>>($"pasteaccount/{account}");
+            return await _requestExecuter.GetResultAsync<IEnumerable<Paste>>($"pasteaccount/{account}");
         }
 
         public async Task<IEnumerable<string>> GetAllDataClasses()
         {
-            return await _requestExcecuter.GetResultAsync<IEnumerable<string>>("dataclasses");
+            return await _requestExecuter.GetResultAsync<IEnumerable<string>>("dataclasses");
         }
         
         public async Task<bool> GetPwnedPassword(string password, bool originalPasswordIsAHash = false,
@@ -89,13 +89,13 @@ namespace BeenPwned.Api
 
                 var endpointUrl = Utilities.BuildQueryString("pwnedpassword", queryValues);
 
-                result = await _requestExcecuter.PostAsync(endpointUrl, new FormUrlEncodedContent(formValues));
+                result = await _requestExecuter.PostAsync(endpointUrl, new FormUrlEncodedContent(formValues));
             }
             else
             {
                 var endpointUrl = Utilities.BuildQueryString($"pwnedpassword/{password}", queryValues);
 
-                result = await _requestExcecuter.GetAsync(endpointUrl);
+                result = await _requestExecuter.GetAsync(endpointUrl);
             }
 
             switch ((int) result.StatusCode)
@@ -111,7 +111,7 @@ namespace BeenPwned.Api
 
         public void Dispose()
         {
-            _requestExcecuter.Dispose();
+            _requestExecuter.Dispose();
         }
     }
 }

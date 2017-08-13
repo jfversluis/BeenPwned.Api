@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BeenPwned.Api.Internals
 {
-    internal interface IRequestExcecuter : IDisposable
+    internal interface IRequestExecuter : IDisposable
     {
         Task<T> GetResultAsync<T>(string endpoint) where T : class;
         Task<HttpResponseMessage> GetAsync(string endpointUrl);
