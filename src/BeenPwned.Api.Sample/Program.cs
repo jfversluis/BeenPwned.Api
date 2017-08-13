@@ -59,6 +59,8 @@ namespace BeenPwned.Api.Sample
             Console.WriteLine($"{isPwnedPost}");
 
             Console.ReadKey();
+
+            client.Dispose();
         }
     }
 }
