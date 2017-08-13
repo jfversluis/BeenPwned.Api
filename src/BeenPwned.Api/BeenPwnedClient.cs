@@ -131,7 +131,7 @@ namespace BeenPwned.Api
 
             if (!_isDisposing)
             {
-                _httpClient?.Dispose();
+                _httpClient.Dispose();
             }
         }
 
