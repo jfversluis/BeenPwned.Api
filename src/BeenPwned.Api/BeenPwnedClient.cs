@@ -48,7 +48,7 @@ namespace BeenPwned.Api
             if (!string.IsNullOrWhiteSpace(domain))
                 queryValues.Add("domain", domain);
 
-            var endpointUrl = Utilities.BuildQueryString($"breachesbreachedaccount/{account}", queryValues);
+            var endpointUrl = Utilities.BuildQueryString($"breachedaccount/{account}", queryValues);
 
             return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
         }
