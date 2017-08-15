@@ -31,7 +31,7 @@ namespace BeenPwned.Api
 
             var endpointUrl = Utilities.BuildQueryString("breaches", queryValues);
 
-            return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
+            return await _requestExecuter.GetCollectionAsync<Breach>(endpointUrl);
         }
 
         public async Task<IEnumerable<Breach>> GetBreachesForAccount(string account, string domain ="", bool truncateResponse = true, bool includeUnverified = false)
@@ -50,7 +50,7 @@ namespace BeenPwned.Api
 
             var endpointUrl = Utilities.BuildQueryString($"breachedaccount/{account}", queryValues);
 
-            return await _requestExecuter.GetResultAsync<IEnumerable<Breach>>(endpointUrl);
+            return await _requestExecuter.GetCollectionAsync<Breach>(endpointUrl);
         }
 
         public async Task<IEnumerable<Paste>> GetPastesForAccount(string account)
@@ -61,12 +61,12 @@ namespace BeenPwned.Api
             if (!Utilities.IsValidEmailaddress(account))
                 throw new ArgumentException("Account it not a (valid) emailaddress", nameof(account));
 
-            return await _requestExecuter.GetResultAsync<IEnumerable<Paste>>($"pasteaccount/{account}");
+            return await _requestExecuter.GetCollectionAsync<Paste>($"pasteaccount/{account}");
         }
 
         public async Task<IEnumerable<string>> GetAllDataClasses()
         {
-            return await _requestExecuter.GetResultAsync<IEnumerable<string>>("dataclasses");
+            return await _requestExecuter.GetCollectionAsync<string>("dataclasses");
         }
         
         public async Task<bool> GetPwnedPassword(string password, bool originalPasswordIsAHash = false,

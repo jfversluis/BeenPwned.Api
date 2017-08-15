@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -34,7 +36,7 @@ namespace BeenPwned.Api.Internals
             _httpClient.Dispose();
         }
 
-        public async Task<T> GetResultAsync<T>(string endpoint) where T : class
+        public async Task<IEnumerable<T>> GetCollectionAsync<T>(string endpoint) where T : class
         {
             var response = await _httpClient.GetAsync(endpoint);
 
@@ -47,7 +49,7 @@ namespace BeenPwned.Api.Internals
                 case 403:
                     throw new BeenPwnedUnavailableException("Access denied");
                 case 404:
-                    throw new BeenPwnedUnavailableException("Not found");
+                    return Enumerable.Empty<T>();
                 case 429:
                     throw new BeenPwnedUnavailableException("Too many requests");
                 default:
@@ -55,7 +57,7 @@ namespace BeenPwned.Api.Internals
             }
 
             var stringResult = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(stringResult);
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(stringResult);
         }
 
         public Task<HttpResponseMessage> GetAsync(string endpointUrl)
