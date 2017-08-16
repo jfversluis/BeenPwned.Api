@@ -3,6 +3,14 @@
 # BeenPwned.Api
 .NET Wrapper library for the [haveibeenpwned.com API](https://haveibeenpwned.com/api/)
 
+## Platform support
+
+|Platform|Version|
+| ------------------- | :----------:|
+|.NET|4.5 & 4.6|
+|.NET Standard|1.3|
+|PCL|Profile 111|
+
 ## Documentation
     /// <summary>
     /// A client which contains all functionality to communicate with the public haveibeenpwned.com API.
