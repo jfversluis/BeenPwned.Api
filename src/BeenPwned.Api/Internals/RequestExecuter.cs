@@ -47,13 +47,13 @@ namespace BeenPwned.Api.Internals
                 case 400:
                     throw new BeenPwnedUnavailableException("Invalid request");
                 case 403:
-                    throw new BeenPwnedUnavailableException("Access denied");
+                    throw new BeenPwnedUnavailableException("Access denied: probably no user-agent is specified for the request.");
                 case 404:
                     return Enumerable.Empty<T>();
                 case 429:
-                    throw new BeenPwnedUnavailableException("Too many requests");
+                    throw new BeenPwnedUnavailableException("Too many requests: rate-limit exceeded. Please try again in a second.");
                 default:
-                    throw new BeenPwnedUnavailableException("Unkown error");
+                    throw new BeenPwnedUnavailableException($"Unknown error. Statuscode {response.StatusCode}, message: {response.ReasonPhrase}");
             }
 
             var stringResult = await response.Content.ReadAsStringAsync();
