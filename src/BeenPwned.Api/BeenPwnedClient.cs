@@ -101,8 +101,12 @@ namespace BeenPwned.Api
             {
                 case 200:
                     return true;
+                case 403:
+                    throw new BeenPwnedUnavailableException("Access denied: probably no user-agent is specified for the request.");
                 case 404:
                     return false;
+                case 429:
+                    throw new BeenPwnedUnavailableException("Too many requests: rate-limit exceeded. Please try again in a second.");
                 default:
                     throw new BeenPwnedUnavailableException($"Unexpected result from API. Statuscode {result.StatusCode}, message: {result.ReasonPhrase}");
             }
